@@ -1,0 +1,14 @@
+{
+  "description": "第一人称抽烟模拟器开发工程",
+  "miniprogramRoot": "apps/miniprogram/dist/",
+  "compileType": "miniprogram",
+  "appid": "touristappid",
+  "projectname": "smoke-mock",
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "postcss": true,
+    "minified": true
+  },
+  "condition": {}
+}

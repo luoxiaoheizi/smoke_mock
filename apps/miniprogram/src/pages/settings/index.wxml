@@ -1,0 +1,8 @@
+<view class="page"><view class="eyebrow">MAKE YOURSELF COMFORTABLE</view><view class="title">按你的习惯。</view><view class="subtitle">声音、触感和画面，都可以自在一点。</view>
+<view wx:if="{{error}}" class="error-panel" bindtap="refresh">{{error}} · 重试</view><view wx:if="{{loading}}" class="skeleton"></view>
+<view wx:else class="settings-card">
+<view class="setting-row row"><view><view>操作音效</view><view class="muted">打火、弹灰和结束时的细微声音</view></view><switch color="#516e48" checked="{{sound}}" data-key="sound" disabled="{{busy || !!error}}" bindchange="change"/></view>
+<view class="setting-row row"><view><view>轻微震动</view><view class="muted">给指尖一点反馈</view></view><switch color="#516e48" checked="{{vibration}}" data-key="vibration" disabled="{{busy || !!error}}" bindchange="change"/></view>
+<picker range="{{qualities}}" value="{{qualityIndex}}" disabled="{{busy || !!error}}" bindchange="quality"><view class="setting-row row"><view><view>画面偏好</view><view class="muted">流畅模式会减少烟雾与绘制频率</view></view><text class="quality">{{qualities[qualityIndex]}} ⌄</text></view></picker>
+</view><view class="about"><view class="eyebrow">MOMENT / 此刻</view><view class="muted">给平常的日子，留一个短暂的停顿。</view><view class="footnote">虚拟互动体验 · 不涉及真实商品交易</view></view></view>
+

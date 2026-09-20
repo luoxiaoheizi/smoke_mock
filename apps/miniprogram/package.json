@@ -1,0 +1,13 @@
+{
+  "name": "@smoke/miniprogram",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node ../../scripts/build-miniprogram.mjs",
+    "dev": "node ../../scripts/build-miniprogram.mjs --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "miniprogram-api-typings": "5.2.3"
+  }
+}

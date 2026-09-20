@@ -1,0 +1,2 @@
+.moment-card{margin-top:28rpx;padding:30rpx;background:#fafaf2;border:1rpx solid #dce2d0;border-radius:16rpx}.moment-date{font-family:Georgia,serif;letter-spacing:2rpx;font-size:23rpx;color:#929d86}.moment-text{font-size:30rpx;line-height:1.9;margin:31rpx 0;color:#526b45}.moment-bottom{display:flex;align-items:center;gap:16rpx;font-size:19rpx;color:#96a088}.small-line{width:31rpx;height:1rpx;background:#b6c0a6}.empty-button{margin-top:34rpx}.more{margin-top:28rpx}
+

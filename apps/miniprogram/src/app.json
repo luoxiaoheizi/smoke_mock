@@ -1,0 +1,40 @@
+{
+  "pages": [
+    "pages/experience/index",
+    "pages/shop/index",
+    "pages/collection/index",
+    "pages/product/index",
+    "pages/settings/index",
+    "pages/wallet/index",
+    "pages/history/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "此刻",
+    "navigationBarBackgroundColor": "#f3f2eb",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f3f2eb"
+  },
+  "tabBar": {
+    "color": "#8b9683",
+    "selectedColor": "#344f41",
+    "backgroundColor": "#f3f2eb",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/experience/index",
+        "text": "此刻"
+      },
+      {
+        "pagePath": "pages/shop/index",
+        "text": "橱窗"
+      },
+      {
+        "pagePath": "pages/collection/index",
+        "text": "收藏"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

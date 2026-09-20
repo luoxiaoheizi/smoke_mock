@@ -1,0 +1,1 @@
+.settings-card{margin-top:40rpx}.setting-row{padding:32rpx 0;border-bottom:1rpx solid #dbe1d2;font-size:29rpx}.setting-row .muted{font-size:21rpx;margin-top:10rpx}.quality{font-size:23rpx;white-space:nowrap;color:#69805e}.about{margin-top:95rpx;text-align:center}.about .muted{margin-top:23rpx}

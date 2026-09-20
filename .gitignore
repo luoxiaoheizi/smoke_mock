@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.cache/
+.env
+.env.*
+!.env.example
+project.private.config.json
+*.tsbuildinfo
+coverage/
+.data/
+artifacts/
+*.log

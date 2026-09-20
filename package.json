@@ -1,0 +1,35 @@
+{
+  "name": "smoke-mock",
+  "version": "0.1.0",
+  "private": true,
+  "description": "第一人称抽烟模拟器：微信小程序与后端基础工程",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.12.0",
+    "npm": ">=10"
+  },
+  "scripts": {
+    "build:domain": "npm run build -w @smoke/domain",
+    "build": "npm run build:domain && npm run build -w @smoke/api && npm run build -w @smoke/miniprogram",
+    "typecheck": "npm run build:domain && npm run typecheck --workspaces --if-present",
+    "test": "npm run build:domain && npm run build -w @smoke/api && npm run build:mini && node --test tests/*.test.cjs",
+    "check": "npm run typecheck && npm test && npm run build && node scripts/verify-miniprogram.mjs",
+    "dev:api": "npm run build:domain && npm run dev -w @smoke/api",
+    "dev:mini": "npm run dev -w @smoke/miniprogram",
+    "build:mini": "npm run build -w @smoke/miniprogram",
+    "preview:pages": "node scripts/preview-pages.mjs",
+    "assets:audio": "node scripts/generate-audio.mjs",
+    "db:migrate": "npm run build:domain && npm run build -w @smoke/api && npm run db:migrate -w @smoke/api"
+  },
+  "overrides": {
+    "multer": "2.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.3",
+    "esbuild": "0.28.2",
+    "typescript": "5.9.3"
+  }
+}

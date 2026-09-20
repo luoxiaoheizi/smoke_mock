@@ -1,0 +1,28 @@
+{
+  "name": "@smoke/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "dev": "npm run build && node --env-file-if-exists=.env dist/main.js",
+    "start": "node --env-file-if-exists=.env dist/main.js",
+    "watch": "tsc -p tsconfig.json --watch",
+    "db:migrate": "node --env-file-if-exists=.env dist/migrate.js"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "0.5.8",
+    "@nestjs/common": "11.2.5",
+    "@nestjs/core": "11.2.5",
+    "@nestjs/platform-express": "11.2.5",
+    "@smoke/domain": "0.1.0",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.15.1",
+    "pg": "8.23.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
+  },
+  "devDependencies": {
+    "@types/pg": "8.23.1"
+  }
+}

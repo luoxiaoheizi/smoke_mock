@@ -1,0 +1,17 @@
+<view class="product-page">
+  <view wx:if="{{error}}" class="page"><view class="error-panel" bindtap="refresh">{{error}} · 重试</view></view>
+  <view wx:else>
+    <view class="product-hero"><view class="hero-label">MOMENT ORIGINAL / 原创系列</view><view class="hero-circle"></view><view class="pack" style="border-top-color:{{product.color}}"><view class="pack-brand">MOMENT</view><view class="pack-name">{{product.name}}</view><view class="pack-line"></view><view class="pack-caption">留一点时间</view></view><view class="hero-caption">一种外观，一点心情。</view></view>
+    <view class="page product-copy"><view class="row"><view class="title">{{product.name}}</view><view class="badge">{{product.unlimited ? '常驻基础款' : '原创虚拟外观'}}</view></view>
+      <view class="description">{{product.id === 'plain' ? '把繁杂留在外面。素净的纸色，陪你度过那些平常的片刻。' : product.id === 'rain' ? '一场雨过后，城市换了颜色。温柔的青绿，像窗边慢慢清晰的风景。' : '天色暗下来，有些时间才属于自己。把这一抹安静的紫，留给夜里的片刻。'}}</view>
+      <view class="specs"><view class="row"><text>兑换规格</text><text>{{product.unlimited ? '不限次数，随时可用' : product.packSize + ' 支 / 盒'}}</text></view><view class="row"><text>已经拥有</text><text>{{product.unlimited ? '始终在你的收藏里' : owned + ' 支'}}</text></view><view class="row"><text>火花币余额</text><text bindtap="wallet">{{coins}} 枚 ↗</text></view></view>
+      <view wx:if="{{bought}}" class="success-note">已经收好了。可以马上选用，也可以留待下次。</view>
+      <view class="footnote">这是虚拟外观，不对应真实烟草品牌或商品。</view>
+    </view>
+    <view class="purchase-bar"><view><view class="price">{{product.unlimited ? '免费' : product.price + ' 火花币'}}</view><view class="muted">{{product.unlimited ? '随时取用' : '每盒 ' + product.packSize + ' 支'}}</view></view>
+      <button wx:if="{{bought || product.unlimited}}" class="primary" bindtap="use" disabled="{{busy || loading}}" loading="{{busy}}">选用这一款</button>
+      <button wx:else class="primary" bindtap="buy" disabled="{{busy || loading || coins < product.price}}" loading="{{busy}}">{{coins < product.price ? '火花币不足' : '兑换一盒'}}</button>
+    </view>
+  </view>
+</view>
+
