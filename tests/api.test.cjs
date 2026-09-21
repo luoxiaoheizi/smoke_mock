@@ -28,6 +28,9 @@ test('持久化 HTTP 流程：身份隔离、校验、并发事务、会话、�
     const token=account.token;
     const user=(route,opts={})=>call(route,{...opts,token});
     assert.equal((await user('/bootstrap')).data.player.coins,100);
+    const catalog=(await user('/bootstrap')).data.products;
+    assert.deepEqual(catalog.filter(p=>p.brand).map(p=>p.id),['zhonghua-hard','hehua-hard','yuxi-soft','baisha-hard']);
+    assert.equal(catalog.find(p=>p.id==='zhonghua-hard').image,'/assets/products/zhonghua-hard.jpg');
     assert.equal((await user('/purchases',{method:'POST',body:{requestId:'buy-00000001',productId:'rain',price:0}})).status,400);
     assert.equal((await user('/preferences',{method:'POST',body:{sound:'false'}})).status,400);
     assert.equal((await user('/sessions?offset=-1')).status,400);

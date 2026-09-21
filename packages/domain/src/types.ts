@@ -5,6 +5,8 @@ export interface Scene {
 export interface Product {
   id: string; name: string; subtitle: string; color: string; price: number; packSize: number; unlimited: boolean;
   description?: string; series?: string;
+  /** 本地包装素材与公开图鉴参考信息；price 始终为游戏火花币。 */
+  image?: string; brand?: string; manufacturer?: string; packaging?: string; lengthMm?: number; sourceUrl?: string;
 }
 export interface StoryEvent {
   id: string; text: string; sceneIds: string[];
@@ -36,4 +38,3 @@ export interface SessionResult { session: Session; player: PlayerState }
 export interface PurchaseResult { purchase: Purchase; player: PlayerState }
 export interface PageResult<T> { items: T[]; total: number; offset: number; limit: number }
 export interface LoginResult { token: string; refreshToken: string; expiresAt: string }
-

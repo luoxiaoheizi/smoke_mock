@@ -1,15 +1,15 @@
 <view class="page">
-  <view class="row"><view class="eyebrow">ALWAYS IN YOUR POCKET</view><view class="settings-link" bindtap="goSettings">设置 ↗</view></view>
-  <view class="title">口袋里的<view>小小收藏。</view></view><view class="subtitle">不多，也刚刚好。</view>
-  <view wx:if="{{error}}" class="error-panel" bindtap="refresh">{{error}} · 点击重试</view><view wx:if="{{loading}}" class="skeleton"></view>
+  <view class="row"><view class="eyebrow">此刻 · 随身收藏</view><button class="link-button" bindtap="goSettings">设置 →</button></view>
+  <view class="title">口袋里的小小收藏。</view><view class="subtitle">选好下一款，再回到你的此刻。</view>
+  <button wx:if="{{error}}" class="error-panel" bindtap="refresh">{{error}}<text class="error-action">重新加载 →</text></button>
+  <view wx:elif="{{loading}}" class="loading-state"><view class="loading-dot"></view><text>正在整理收藏…</text></view>
   <view wx:else>
     <view class="collection-item {{selectedId === item.id ? 'chosen' : ''}}" wx:for="{{products}}" wx:key="id">
-      <view class="mini-pack" style="border-top-color:{{item.color}}">{{item.name}}</view>
-      <view class="collection-info"><view class="collection-name">{{item.name}}<text wx:if="{{selectedId === item.id}}" class="selected-label">已选用</text></view><view class="muted">{{item.unlimited ? '基础款 · 随时可用' : '口袋里还有 ' + item.owned + ' 支'}}</view></view>
-      <button class="small {{selectedId === item.id ? 'secondary' : 'primary'}}" bindtap="select" data-id="{{item.id}}" disabled="{{busy || (selectedId === item.id && (item.unlimited || item.owned > 0))}}">{{!item.unlimited && item.owned === 0 ? '补充' : selectedId === item.id ? '✓' : '选用'}}</button>
+      <image wx:if="{{item.image && !imageErrors[item.id]}}" class="collection-image" src="{{item.image}}" mode="aspectFit" data-id="{{item.id}}" binderror="imageError" aria-hidden="true" /><view wx:else class="mini-pack" style="border-top-color:{{item.color}}" aria-hidden="true">{{item.name}}</view>
+      <view class="collection-info"><view class="collection-name">{{item.name}}</view><view class="muted">{{item.unlimited ? '基础款 · 随时可用' : '剩余 ' + item.owned + ' 支'}}</view><text wx:if="{{selectedId === item.id}}" class="selected-label">✓ 下一轮使用</text></view>
+      <button class="small {{selectedId === item.id ? 'secondary' : 'primary'}}" bindtap="select" data-id="{{item.id}}" disabled="{{busy || (selectedId === item.id && (item.unlimited || item.owned > 0))}}" aria-label="{{!item.unlimited && item.owned === 0 ? '补充' : selectedId === item.id ? '已选用' : '选用'}}{{item.name}}">{{!item.unlimited && item.owned === 0 ? '补充' : selectedId === item.id ? '已选用' : '选用'}}</button>
     </view>
-    <view class="menu"><view class="menu-row row" bindtap="goWallet"><view><view>我的火花币</view><view class="muted">补给与兑换，都记在这里。</view></view><text>{{coins}} 枚 ↗</text></view><view class="menu-row row" bindtap="goHistory"><view><view>过去的此刻</view><view class="muted">那些短暂的停留。</view></view><text>↗</text></view></view>
-    <button class="primary back-button" bindtap="goExperience">回到此刻 ↗</button><view class="footnote">选中的外观从下一轮开始使用，当前体验保持不变。</view>
+    <view class="menu"><button class="menu-row row" bindtap="goWallet"><view><view>我的火花币</view><view class="muted">领取补给，查看兑换记录</view></view><text>{{coins}} 枚 ›</text></button><button class="menu-row row" bindtap="goHistory"><view><view>过去的此刻</view><view class="muted">回看那些短暂的停留</view></view><text>›</text></button></view>
+    <button class="primary back-button" bindtap="goExperience">回到此刻 →</button><view class="footnote">选中的外观从下一轮开始使用，当前体验保持不变。</view>
   </view>
 </view>
-

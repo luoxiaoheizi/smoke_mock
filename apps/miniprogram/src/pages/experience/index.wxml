@@ -1,19 +1,20 @@
 <view class="experience">
   <canvas id="sceneCanvas" type="2d" class="scene-canvas"></canvas>
-  <view wx:if="{{canvasFailed}}" class="canvas-fallback">场景加载失败 <text bindtap="initCanvas">重新加载</text></view>
+  <view wx:if="{{canvasFailed}}" class="canvas-fallback">场景加载失败 <button class="glass" bindtap="initCanvas">重新加载场景</button></view>
   <view class="scene-shade"></view>
   <view class="top-panel">
-    <view class="row"><view class="eyebrow light">MOMENT / 此刻</view><view class="round-action" bindtap="goSettings">☷</view></view>
-    <view class="clock">{{time}}</view>
-    <view class="location" bindtap="openScenes"><view class="live-dot"></view>{{sceneName}}<text class="location-chevron">⌄</text></view>
+    <view class="row"><view class="eyebrow light">MOMENT / 此刻</view><button class="round-action" bindtap="goSettings">设置</button></view>
+    <view class="clock-caption">{{sessionId ? '这一刻开始于' : '此时此刻 · 北京时间'}}</view><view class="clock">{{time}}</view>
+    <button class="location" bindtap="openScenes" disabled="{{loading || busy || !!error}}"><view class="live-dot"></view>{{sceneName}}<text class="location-chevron">{{sessionId ? '体验中' : '换个地方 ›'}}</text></button>
   </view>
   <view class="story {{showStory ? 'visible' : ''}}"><view class="story-line"></view>{{eventText}}</view>
-  <view wx:if="{{sessionId && phase === 'ready'}}" class="lighter-hotspot" bindtap="ignite"><view class="hotspot-dot"></view></view>
-  <view wx:if="{{sessionId}}" class="hand-hotspot" bindtouchstart="inhale" bindtouchend="release" bindtouchcancel="release"></view>
+  <view wx:if="{{sessionId && phase === 'ready'}}" aria-hidden="true" class="lighter-hotspot" bindtap="ignite"><view class="hotspot-dot"></view></view>
+  <view wx:if="{{sessionId}}" aria-hidden="true" class="hand-hotspot" bindtouchstart="inhale" bindtouchend="release" bindtouchcancel="release"></view>
   <view class="bottom-panel">
-    <view wx:if="{{error}}" class="error-panel" bindtap="refresh">{{error}} · 点击重试</view>
-    <view wx:if="{{syncFailed}}" class="sync-note" bindtap="retrySync">进度已保留在本机，点击重试同步</view>
-    <view class="current-item row"><view bindtap="goCollection"><text class="tiny-label">手中这一款</text><text class="item-name">{{productName}} ↗</text></view><view class="moment-label">{{sessionId ? '正在这一刻' : completed ? '下次见，也在此刻' : '不必赶时间'}}</view></view>
+    <button wx:if="{{error}}" class="error-panel" bindtap="refresh" disabled="{{loading}}">{{error}} · 重新加载 →</button>
+    <view wx:if="{{actionError}}" class="error-panel">{{actionError}}，请重试下方操作。</view>
+    <button wx:if="{{syncFailed}}" class="sync-note" bindtap="retrySync">进度已保留在本机 · 重试同步 →</button>
+    <view class="current-item row"><button class="link-button current-product" bindtap="goCollection"><text class="tiny-label">手中这一款</text><text class="item-name">{{productName}} ›</text></button><view class="moment-label">{{sessionId ? '正在这一刻' : completed ? '下次见，也在此刻' : '不必赶时间'}}</view></view>
     <view class="hint">{{loading ? '正在准备你的此刻…' : hint}}</view>
     <button wx:if="{{!sessionId}}" class="primary enter-button" bindtap="enter" disabled="{{loading || busy || !!error}}" loading="{{busy}}">{{completed ? '开启下一刻' : '进入这一刻'}}<text class="button-arrow">↗</text></button>
     <view wx:else>
@@ -23,17 +24,17 @@
         <button class="primary hold {{phase === 'inhaling' ? 'holding' : ''}}" bindtouchstart="inhale" bindtouchend="release" bindtouchcancel="release" disabled="{{phase === 'ready' || phase === 'lighting' || busy || remaining <= 0}}">{{phase === 'inhaling' ? '松开吐出' : '按住吸入'}}</button>
         <button class="glass" bindtap="ash" disabled="{{phase !== 'burning' || busy}}">抖灰</button>
       </view>
-      <view class="finish-action" bindtap="finish">{{busy ? '正在收好这一刻…' : '结束这一刻'}}</view>
+      <button class="finish-action" bindtap="finish" disabled="{{busy}}">{{busy ? '正在收好这一刻…' : '结束这一刻'}}</button>
     </view>
   </view>
-  <view wx:if="{{showScenes}}" class="modal-mask" bindtap="closeScenes">
+  <view wx:if="{{showScenes}}" class="modal-mask" bindtap="closeScenes" catchtouchmove="stopTap">
     <view class="bottom-sheet" catchtap="stopTap">
-      <view class="sheet-handle"></view><view class="row"><view class="section-title">换个地方</view><view class="close" bindtap="closeScenes">×</view></view>
+      <view class="sheet-handle"></view><view class="row"><view class="section-title">换个地方</view><button class="close" bindtap="closeScenes">关闭</button></view>
       <view class="muted">眼前的风景，留给你选择。</view>
-      <view class="scene-choice {{sceneId === item.id ? 'selected' : ''}}" wx:for="{{scenes}}" wx:key="id" data-id="{{item.id}}" bindtap="selectScene">
+      <button disabled="{{busy}}" class="scene-choice {{sceneId === item.id ? 'selected' : ''}}" wx:for="{{scenes}}" wx:key="id" data-id="{{item.id}}" bindtap="selectScene">
         <view class="scene-thumb {{item.theme}}"><view></view></view>
-        <view class="scene-info"><view>{{item.name}}</view><view class="muted">{{item.description}}</view></view><text class="check-mark">{{sceneId === item.id ? '✓' : '↗'}}</text>
-      </view>
+        <view class="scene-info"><view>{{item.name}}</view><view class="muted">{{item.description}}</view></view><text class="check-mark">{{sceneId === item.id ? '已选' : '选择'}}</text>
+      </button>
       <view class="footnote">时间自动取当前时间，故事会随地点自然发生。</view>
     </view>
   </view>

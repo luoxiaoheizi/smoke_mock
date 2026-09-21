@@ -1,0 +1,42 @@
+[
+  {
+    "id": "zhonghua-hard",
+    "source": "https://www.ciggies.app/sku/187",
+    "imageUrl": "https://www.ciggies.app/api/img/products/202507301114199930.jpg",
+    "path": "/assets/products/zhonghua-hard.jpg",
+    "bytes": 32966,
+    "sha256": "276784ce0d194386105d59aac341e81ab3a4cd61a376baecd2f5b5e6a2120e03",
+    "downloadedAt": "2026-09-21",
+    "license": "未发现可商用授权声明；保留原图与水印，发布前确认授权或替换授权素材"
+  },
+  {
+    "id": "hehua-hard",
+    "source": "https://www.ciggies.app/sku/1968",
+    "imageUrl": "https://www.ciggies.app/api/img/products/20140205194619.jpg",
+    "path": "/assets/products/hehua-hard.jpg",
+    "bytes": 33202,
+    "sha256": "91a9eff7d9d356c4e29ea2c2c6b2da8e4b048ebcbaee315b923adcd856a6ac29",
+    "downloadedAt": "2026-09-21",
+    "license": "未发现可商用授权声明；保留原图与水印，发布前确认授权或替换授权素材"
+  },
+  {
+    "id": "yuxi-soft",
+    "source": "https://www.ciggies.app/sku/282",
+    "imageUrl": "https://www.ciggies.app/api/img/products/20060117165155.png",
+    "path": "/assets/products/yuxi-soft.png",
+    "bytes": 83119,
+    "sha256": "4ac319567c57e38c5bb24555e88987ce65a536cddbc6befd355b238f075e69f0",
+    "downloadedAt": "2026-09-21",
+    "license": "未发现可商用授权声明；保留原图与水印，发布前确认授权或替换授权素材"
+  },
+  {
+    "id": "baisha-hard",
+    "source": "https://www.ciggies.app/sku/1",
+    "imageUrl": "https://www.ciggies.app/api/img/products/2021012910035499.png",
+    "path": "/assets/products/baisha-hard.png",
+    "bytes": 67958,
+    "sha256": "da0b46c92ce615f1968256bbd0ddf3a866b6f4fdac94aee1a161b9a9751659e0",
+    "downloadedAt": "2026-09-21",
+    "license": "未发现可商用授权声明；保留原图与水印，发布前确认授权或替换授权素材"
+  }
+]

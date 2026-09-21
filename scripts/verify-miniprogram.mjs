@@ -8,7 +8,7 @@ const config=JSON.parse(await readFile(join(root,'project.config.json'),'utf8'))
 const output=join(root,config.miniprogramRoot);
 const app=JSON.parse(await readFile(join(output,'app.json'),'utf8'));
 await access(join(output,'app.js'));
-const tags=new Set(['view','text','canvas','button','picker','switch']);
+const tags=new Set(['view','text','canvas','button','picker','switch','image']);
 for(const page of app.pages){
  for(const ext of ['js','json','wxml','wxss'])await access(join(output,page+'.'+ext));
  const script=await readFile(join(output,page+'.js'),'utf8');
@@ -23,3 +23,17 @@ for(const tab of app.tabBar.list)assert(app.pages.includes(tab.pagePath),'Tab �
 for(const audio of ['ignite','ash','end'])await access(join(output,'assets/audio/'+audio+'.wav'));
 console.log('小程序产物检查通过：'+app.pages.length+' 个页面、事件绑定、原生标签、Tab 路由和音效资源完整。');
 
+
+const { PRODUCTS } = await import('../packages/domain/dist/index.js');
+const sources=JSON.parse(await readFile(join(root,'docs/product-image-sources.json'),'utf8'));
+for(const product of PRODUCTS.filter(p=>p.image)){
+ assert(product.image.startsWith('/assets/products/') && !product.image.includes('..'));
+ const source=sources.find(s=>s.id===product.id);
+ assert(source && source.path===product.image && source.source===product.sourceUrl,product.id+' 缺少对应来源');
+ const original=await readFile(join(root,'apps/miniprogram/src',product.image));
+ const bundled=await readFile(join(output,product.image));
+ assert(original.equals(bundled),product.id+' 包装图未正确打包');
+ const {createHash}=await import('node:crypto');
+ assert.equal(createHash('sha256').update(original).digest('hex'),source.sha256);
+}
+console.log('品牌包装资源与来源清单核验通过。');

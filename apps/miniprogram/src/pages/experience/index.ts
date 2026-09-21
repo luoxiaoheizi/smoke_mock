@@ -10,7 +10,7 @@ Page({
     scenes: SCENES, sceneId: 'office-restroom', sceneName: '公司厕所', theme: 'toilet' as 'toilet' | 'balcony',
     productName: '留白', color: '#d4c5aa', time: '--:--', period: 'day' as 'day' | 'dusk' | 'night',
     eventText: '', sessionId: '', phase: 'ready' as Phase, remaining: 100, ash: 0,
-    showStory: false, showScenes: false, loading: true, busy: false, error: '', syncFailed: false,
+    showStory: false, showScenes: false, loading: true, busy: false, error: '', actionError: '', syncFailed: false,
     hint: '留一点时间，给此刻。', completed: false, highQuality: true, canvasFailed: false,
   },
   visible: false, renderer: new SceneRenderer(), canvas: undefined as WechatMiniprogram.Canvas | undefined,
@@ -98,8 +98,8 @@ Page({
     catch (error) { toastError(error); } finally { this.setData({ busy: false }); }
   },
   async enter() {
-    if (this.data.loading || this.data.busy || this.data.sessionId) return;
-    this.setData({ busy: true, completed: false });
+    if (this.data.loading || this.data.busy || this.data.sessionId || this.data.error) return;
+    this.setData({ busy: true, completed: false, actionError: '' });
     const productId = getPreferences().productId;
     const key = 'start:' + this.data.sceneId + ':' + productId;
     try {
@@ -115,7 +115,7 @@ Page({
       this.startTick();
     } catch (error) {
       if (error instanceof ApiError && error.code === 'SESSION_ACTIVE') await this.refresh();
-      else toastError(error);
+      else { this.setData({ actionError: error instanceof Error ? error.message : '暂时无法开始，请重试' }); toastError(error); }
     } finally { this.setData({ busy: false }); }
   },
   ignite() {
@@ -139,15 +139,16 @@ Page({
   async finish() {
     if (!this.data.sessionId || this.data.busy) return;
     const id = this.data.sessionId;
+    const previousPhase = this.data.phase === 'ready' ? 'ready' : 'burning';
     this.clearTimers(); this.save();
-    this.setData({ busy: true, phase: 'extinguishing', showStory: false }); playSound('end');
+    this.setData({ busy: true, phase: 'extinguishing', showStory: false, actionError: '' }); playSound('end');
     try {
       await this.syncTask;
       await api.end(id);
       wx.removeStorageSync(VISUAL_KEY);
       this.setData({ sessionId: '', phase: 'ready', eventText: '', completed: true, hint: '这一刻，先到这里。', remaining: 100, ash: 0 });
       await this.refresh();
-    } catch (error) { toastError(error); this.setData({ phase: 'burning' }); this.startTick(); }
+    } catch (error) { toastError(error); this.setData({ phase: previousPhase, actionError: error instanceof Error ? error.message : '暂时无法结束，请重试' }); this.startTick(); }
     finally { this.setData({ busy: false }); }
   },
   startTick() {
@@ -195,4 +196,3 @@ Page({
   stopTap() {},
   vibrate() { if (getPreferences().vibration) wx.vibrateShort({ type: 'light', fail() {} }); },
 });
-

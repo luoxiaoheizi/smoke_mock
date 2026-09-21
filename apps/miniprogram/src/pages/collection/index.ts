@@ -2,7 +2,8 @@ import { PRODUCTS } from '../../../../../packages/domain/src/index';
 import { api } from '../../services/api';
 import { toastError } from '../../services/preferences';
 Page({
-  data: { products: PRODUCTS.map(p => ({ ...p, owned: 0 })), selectedId: 'plain', loading: true, busy: false, error: '', coins: 0 },
+  data: { imageErrors: {} as Record<string, boolean>, products: PRODUCTS.map(p => ({ ...p, owned: 0 })), selectedId: 'plain', loading: true, busy: false, error: '', coins: 0 },
+  imageError(event: WechatMiniprogram.TouchEvent) { this.setData({ imageErrors: { ...this.data.imageErrors, [String(event.currentTarget.dataset.id)]: true } }); },
   onShow() { void this.refresh(); },
   async refresh() {
     this.setData({ loading: true, error: '' });

@@ -1,2 +1,7 @@
-.moment-card{margin-top:28rpx;padding:30rpx;background:#fafaf2;border:1rpx solid #dce2d0;border-radius:16rpx}.moment-date{font-family:Georgia,serif;letter-spacing:2rpx;font-size:23rpx;color:#929d86}.moment-text{font-size:30rpx;line-height:1.9;margin:31rpx 0;color:#526b45}.moment-bottom{display:flex;align-items:center;gap:16rpx;font-size:19rpx;color:#96a088}.small-line{width:31rpx;height:1rpx;background:#b6c0a6}.empty-button{margin-top:34rpx}.more{margin-top:28rpx}
-
+.moment-card { margin-top:24rpx; padding:28rpx; background:var(--color-surface); border:1rpx solid var(--color-border); border-left:5rpx solid #9bb193; border-radius:0 var(--radius-control) var(--radius-control) 0; }
+.moment-card .row { flex-wrap:wrap; gap:12rpx; }
+.moment-date { font-family:var(--font-number); font-size:24rpx; color:var(--color-muted); }
+.moment-text { font-size:30rpx; line-height:1.9; margin:25rpx 0; color:var(--color-text); overflow-wrap:anywhere; }
+.moment-bottom { display:flex; align-items:center; gap:16rpx; font-size:23rpx; color:var(--color-muted); }
+.small-line { width:28rpx; height:1rpx; background:var(--color-border); }
+.empty-button { margin-top:30rpx; width:100%; }.more { margin-top:28rpx; width:100%; }

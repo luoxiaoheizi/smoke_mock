@@ -10,14 +10,14 @@
   ],
   "window": {
     "navigationBarTitleText": "此刻",
-    "navigationBarBackgroundColor": "#f3f2eb",
+    "navigationBarBackgroundColor": "#f0f3ee",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#f3f2eb"
+    "backgroundColor": "#f0f3ee"
   },
   "tabBar": {
-    "color": "#8b9683",
+    "color": "#586d5f",
     "selectedColor": "#344f41",
-    "backgroundColor": "#f3f2eb",
+    "backgroundColor": "#f0f3ee",
     "borderStyle": "white",
     "list": [
       {

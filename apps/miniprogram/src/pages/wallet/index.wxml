@@ -1,8 +1,11 @@
-<view class="page"><view class="eyebrow">LITTLE SPARKS</view><view class="balance-card"><view class="balance-label">我的火花币</view><view class="balance">{{coins}}<text> 枚</text></view><view class="balance-note">攒一点，换一个喜欢的外观。</view></view>
-<view wx:if="{{error}}" class="error-panel" bindtap="refresh">{{error}} · 重试</view>
-<view class="daily row"><view><view>今天的补给</view><view class="muted">每天 20 枚，自在收下。</view></view><button class="small primary" bindtap="claim" disabled="{{claimed || busy || loading || !!error}}">{{claimed?'已领取':'+20 · 领取'}}</button></view>
-<view class="section-title ledger-title">来去有记录</view><view wx:if="{{loading}}" class="skeleton"></view>
+<view class="page"><view class="eyebrow">此刻 · 我的火花币</view><view class="balance-card"><view class="balance-label">可用余额</view><view class="balance">{{loading ? '—' : coins}}<text> 枚</text></view><view class="balance-note">每天攒一点，换一款喜欢的外观。</view></view>
+<button wx:if="{{error}}" class="error-panel" bindtap="refresh">{{error}}<text class="error-action">重新加载 →</text></button>
+<view class="daily row"><view><view>每日补给</view><view class="muted">每天可领取 20 枚</view></view><button class="small primary" bindtap="claim" loading="{{busy}}" disabled="{{claimed || busy || loading || loadingMore || !!error}}">{{claimed ? '已领取' : '领取补给'}}</button></view>
+<view class="row section-heading"><view class="section-title">收支记录</view><text wx:if="{{!loading && !error}}" class="section-meta">共 {{total}} 条</text></view>
+<view wx:if="{{loading}}" class="loading-state"><view class="loading-dot"></view><text>正在读取记录…</text></view>
+<view wx:elif="{{!error}}">
 <view class="ledger-row row" wx:for="{{rows}}" wx:key="id"><view><view>{{item.title}}</view><view class="muted">{{item.date}} · 余额 {{item.balance}}</view></view><text class="{{item.amount > 0 ? 'income' : 'expense'}}">{{item.amountLabel}}</text></view>
-<view wx:if="{{!loading && !error && !rows.length}}" class="empty"><view class="muted">还没有记录，先收下今天的补给吧。</view></view>
-<button wx:if="{{rows.length < total}}" class="small secondary more" bindtap="more" loading="{{loadingMore}}">查看更多</button><view class="footnote">火花币只用于兑换虚拟道具，不支持充值、转让或提现。</view></view>
-
+<view wx:if="{{!rows.length}}" class="empty"><view class="empty-title">还没有收支记录</view><view class="muted">领取上方每日补给，第一笔记录就会出现。</view></view>
+<button wx:if="{{rows.length < total}}" class="small secondary more" bindtap="more" disabled="{{loadingMore || busy}}" loading="{{loadingMore}}">加载更多</button>
+<view wx:elif="{{rows.length}}" class="footnote">已显示全部记录</view>
+</view><view class="footnote">火花币只用于兑换虚拟道具，不支持充值、转让或提现。记录时间为北京时间。</view></view>

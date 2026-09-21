@@ -1,20 +1,22 @@
 // 将真实 WXML/WXSS 和 Page 初始状态转换为只读浏览器视觉预览。
 // 不是微信运行时，不替代微信开发者工具/真机验收。
-import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {readFile,writeFile,mkdir,cp} from 'node:fs/promises';
 import {dirname,resolve,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {build} from 'esbuild';
 import vm from 'node:vm';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),out=join(root,'artifacts/preview');
 await mkdir(out,{recursive:true});
+await cp(join(root,'apps/miniprogram/src/assets/products'),join(out,'assets/products'),{recursive:true});
 const app=JSON.parse(await readFile(join(root,'apps/miniprogram/src/app.json'),'utf8'));
 let baseCss=await readFile(join(root,'apps/miniprogram/src/app.wxss'),'utf8');
-const toCss=css=>css.replace(/(-?\d*\.?\d+)rpx/g,(_,n)=>(Number(n)*.52)+'px').replace(/(^|\n)page\s*\{/g,'$1.screen {').replace(/\bview\b/g,'div').replace(/\btext(?=\s*[:{>,])/g,'span');
+const toCss=css=>css.replace(/(-?\d*\.?\d+)rpx/g,(_,n)=>'calc(var(--rpx) * '+Number(n)+')').replace(/(^|\n)page\s*\{/g,'$1.screen {').replace(/(?<![\w-])view(?=[\s.:#\[{>,])/g,'div').replace(/(?<![\w-])text(?=[\s.:#\[{>,])/g,'span');
 const pages=[];
 for(const route of app.pages){
  const code=await readFile(join(root,'apps/miniprogram/dist',route+'.js'),'utf8');let definition;
  vm.runInNewContext(code,{Page:value=>{definition=value},wx:{},console,setTimeout,clearTimeout,setInterval,clearInterval});
  const data=JSON.parse(JSON.stringify(definition.data));data.loading=false;data.error='';data.coins=100;
+ if(route.includes('product')) { const shop = pages.find(p=>p.route.includes('shop')); if(shop) data.product=shop.data.products.find(p=>p.id==='zhonghua-hard'); }
  if(route.includes('experience'))Object.assign(data,{time:'10:16',period:'day',theme:'toilet',showStory:true,eventText:'点上一支烟，开启粑粑时间。'});
  pages.push({route,data,template:await readFile(join(root,'apps/miniprogram/src',route+'.wxml'),'utf8'),css:toCss(baseCss+'\n'+await readFile(join(root,'apps/miniprogram/src',route+'.wxss'),'utf8'))});
 }

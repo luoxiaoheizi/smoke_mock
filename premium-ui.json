@@ -1,0 +1,31 @@
+{
+  "profile": "product-admin",
+  "sourceRoots": [
+    "apps/miniprogram/src"
+  ],
+  "locale": "zh-CN",
+  "canonicalMap": "UX-CONTRACT.md",
+  "requiredCapabilities": [
+    "Select/Listbox",
+    "Date",
+    "Scrollbar",
+    "Toast",
+    "CRUD"
+  ],
+  "ownership": {
+    "Select/Listbox": "native",
+    "Date": "typed"
+  },
+  "requiredCommands": [
+    "check",
+    "ui"
+  ],
+  "commands": {
+    "check": "npm run check",
+    "ui": "node scripts/verify-ui.mjs"
+  },
+  "evidence": {
+    "crudFullFlow": "tests/frontend.test.cjs",
+    "failurePaths": "tests/frontend.test.cjs"
+  }
+}

@@ -2,10 +2,14 @@ import { PRODUCTS, type Product } from '../../../../../packages/domain/src/index
 import { api, operationId, completeOperation } from '../../services/api';
 import { toastError } from '../../services/preferences';
 Page({
-  data: { product: PRODUCTS[0]! as Product, coins: 0, owned: 0, loading: true, busy: false, error: '', bought: false },
+  data: { imageFailed: false, product: PRODUCTS[0]! as Product, coins: 0, owned: 0, loading: true, busy: false, error: '', bought: false },
+  imageError() { this.setData({ imageFailed: true }); },
   productId: '',
-  onLoad(options: Record<string,string>) { this.productId = options.id ?? ''; void this.refresh(); },
+  onLoad(options: Record<string,string>) { this.productId = options.id ?? ''; },
+  onShow() { return this.refresh(); },
   async refresh() {
+    if (this.data.busy || this.refreshing) return;
+    this.refreshing = true;
     this.setData({ loading: true, error: '' });
     try {
       const { products, player } = await api.bootstrap();
@@ -13,8 +17,9 @@ Page({
       if (!product) throw new Error('这款商品没有找到，请返回橱窗重新选择');
       this.setData({ product, coins: player.coins, owned: player.inventory[product.id] ?? 0 });
     } catch (error) { this.setData({ error: error instanceof Error ? error.message : '加载失败' }); }
-    finally { this.setData({ loading: false }); }
+    finally { this.refreshing = false; this.setData({ loading: false }); }
   },
+  refreshing: false,
   async buy() {
     if (this.data.busy || this.data.loading || this.data.error) return;
     if (this.data.product.unlimited) { await this.use(); return; }
@@ -35,4 +40,3 @@ Page({
   },
   wallet() { wx.navigateTo({ url: '/pages/wallet/index' }); },
 });
-

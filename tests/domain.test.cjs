@@ -6,6 +6,23 @@ const {
 } = require('../packages/domain/dist');
 
 const morning = new Date('2026-09-18T02:16:00.000Z'); // 周五北京时间 10:16
+test('四款品牌参考商品可兑换、幂等重试、选用并消耗库存', () => {
+  const { PRODUCTS, updatePreferences } = require('../packages/domain/dist');
+  for (const id of ['zhonghua-hard', 'hehua-hard', 'yuxi-soft', 'baisha-hard']) {
+    const product = PRODUCTS.find(p => p.id === id);
+    assert(product, id + ' 应在共享商品目录中');
+    const player = createPlayer();
+    const input = { requestId: 'purchase-brand-001', productId: id };
+    purchase(player, input); purchase(player, input);
+    assert.equal(player.coins, 100 - product.price);
+    assert.equal(player.inventory[id], 20);
+    updatePreferences(player, { productId: id });
+    assert.equal(player.preferences.productId, id);
+    startSession(player, { requestId: 'session-brand-001', productId: id, sceneId: 'balcony' }, morning);
+    assert.equal(player.inventory[id], 19);
+    assert.equal(player.sessions[0].productId, id);
+  }
+});
 const event = (overrides = {}) => ({
   id: 'a', text: '事件', sceneIds: ['balcony'], startMinute: 0, endMinute: 1440,
   weight: 1, cooldownMinutes: 60, enabled: true, ...overrides,
@@ -110,4 +127,3 @@ test('每日补给以北京时间自然日去重', () => {
   claimDaily(player, new Date('2026-09-18T16:00:00Z'));
   assert.equal(player.coins, 140);
 });
-

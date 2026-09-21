@@ -1,1 +1,9 @@
-.settings-card{margin-top:40rpx}.setting-row{padding:32rpx 0;border-bottom:1rpx solid #dbe1d2;font-size:29rpx}.setting-row .muted{font-size:21rpx;margin-top:10rpx}.quality{font-size:23rpx;white-space:nowrap;color:#69805e}.about{margin-top:95rpx;text-align:center}.about .muted{margin-top:23rpx}
+.settings-card { margin-top:32rpx; background:var(--color-surface); border:1rpx solid var(--color-border); border-radius:var(--radius-panel); padding:0 24rpx; }
+.setting-row { min-height:150rpx; padding:28rpx 0; border-bottom:1rpx solid var(--color-border); font-size:29rpx; }
+.setting-row .setting-copy { flex:1; }
+.setting-row .muted { font-size:23rpx; margin-top:8rpx; }
+.setting-row switch { flex-shrink:0; }
+.quality-row { border-bottom:0; flex-wrap:wrap; }
+.quality { font-size:25rpx; color:var(--color-primary); }
+.about { margin-top:72rpx; padding-top:32rpx; border-top:1rpx solid var(--color-border); }
+.about .muted { margin-top:16rpx; }
