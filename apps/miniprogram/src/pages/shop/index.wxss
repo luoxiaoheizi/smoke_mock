@@ -24,3 +24,7 @@ button.shelf { width:100%; position:relative; display:flex; align-items:center; 
 
 .shelf .product-image { width:150rpx; height:238rpx; flex-shrink:0; margin-left:20rpx; object-fit:contain; }
 @media (max-width:350px) { .shelf .product-image { margin-left:8rpx; } }
+
+button.reward-entry { width:100%; text-align:left; gap:16rpx; padding:24rpx 0 0; background:transparent; font-size:26rpx; }
+.reward-entry .muted { font-size:22rpx; margin-top:6rpx; }
+.reward-entry > text { flex-shrink:0; font-size:23rpx; }

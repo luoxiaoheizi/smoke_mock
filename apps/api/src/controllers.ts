@@ -5,7 +5,7 @@ import { AuthGuard, type AuthRequest } from './auth.guard';
 import { AuthService } from './auth.service';
 import { DatabaseService } from './database.service';
 import { APP_CONFIG, type AppConfig } from './config';
-import { LoginDto, RefreshDto, PageDto, PreferencesDto, ProgressDto, PurchaseDto, StartSessionDto } from './dto';
+import { AdClaimDto, LoginDto, RefreshDto, PageDto, PreferencesDto, ProgressDto, PurchaseDto, StartSessionDto } from './dto';
 @Controller()
 export class HealthController {
   constructor(private readonly db: DatabaseService, @Inject(APP_CONFIG) private readonly config: AppConfig) {}
@@ -29,6 +29,8 @@ export class GameController {
   @Post('sessions/:id/end') end(@Req() r: AuthRequest, @Param('id') id: string) { return this.game.end(r.playerId, id); }
   @Get('sessions') history(@Req() r: AuthRequest, @Query() page: PageDto) { return this.game.history(r.playerId, page); }
   @Post('wallet/daily-claim') claim(@Req() r: AuthRequest) { return this.game.claim(r.playerId); }
+  @Post('wallet/ad/start') beginAd(@Req() r: AuthRequest) { return this.game.beginAd(r.playerId); }
+  @Post('wallet/ad/claim') claimAd(@Req() r: AuthRequest, @Body() input: AdClaimDto) { return this.game.claimAd(r.playerId, input.ticketId); }
   @Get('wallet/ledger') ledger(@Req() r: AuthRequest, @Query() page: PageDto) { return this.game.ledger(r.playerId, page); }
   @Post('preferences') preferences(@Req() r: AuthRequest, @Body() patch: PreferencesDto) { return this.game.preferences(r.playerId, patch); }
 }

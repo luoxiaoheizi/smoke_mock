@@ -26,9 +26,10 @@ const assert = require('node:assert/strict');
             if (state === 'error') data.error = '暂时连接不上，请检查网络后重试';
             if (state === 'long') {
               data.rows = p.route.includes('wallet')
-                ? [{ id:'one', title:'每日补给 · 保留完整收支说明', date:'2026-09-21 10:16', balance:120, amount:20, amountLabel:'+20' }]
+                ? [{ id:'one', title:'每日补给 · 保留完整收支说明', date:'2026-09-21 10:16', balance:120, amount:20, amountLabel:'+￥20' }]
                 : [{ id:'one', date:'2026-09-21 10:16', place:'出租屋阳台', product:'雨后', eventText:'晚饭的香味从楼下飘来，远处的车声渐渐远去。'.repeat(5) }];
               data.total = 1;
+              if (p.route.includes('wallet')) Object.assign(data, { pendingAd:true, rewardError:'奖励暂未到账，请检查网络后重试。', rewards:{...data.rewards,watchedCount:3,nextAmount:0} });
               if (p.route.includes('experience')) Object.assign(data, { showScenes:true });
             }
             window.renderPreview({ ...p, data }, frame);

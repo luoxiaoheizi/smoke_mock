@@ -16,6 +16,7 @@ for(const route of app.pages){
  const code=await readFile(join(root,'apps/miniprogram/dist',route+'.js'),'utf8');let definition;
  vm.runInNewContext(code,{Page:value=>{definition=value},wx:{},console,setTimeout,clearTimeout,setInterval,clearInterval});
  const data=JSON.parse(JSON.stringify(definition.data));data.loading=false;data.error='';data.coins=100;
+ if(route.includes('wallet')) data.rewards.mode='demo';
  if(route.includes('product')) { const shop = pages.find(p=>p.route.includes('shop')); if(shop) data.product=shop.data.products.find(p=>p.id==='zhonghua-hard'); }
  if(route.includes('experience'))Object.assign(data,{time:'10:16',period:'day',theme:'toilet',showStory:true,eventText:'点上一支烟，开启粑粑时间。'});
  pages.push({route,data,template:await readFile(join(root,'apps/miniprogram/src',route+'.wxml'),'utf8'),css:toCss(baseCss+'\n'+await readFile(join(root,'apps/miniprogram/src',route+'.wxss'),'utf8'))});

@@ -1,11 +1,24 @@
-<view class="page"><view class="eyebrow">此刻 · 我的火花币</view><view class="balance-card"><view class="balance-label">可用余额</view><view class="balance">{{loading ? '—' : coins}}<text> 枚</text></view><view class="balance-note">每天攒一点，换一款喜欢的外观。</view></view>
-<button wx:if="{{error}}" class="error-panel" bindtap="refresh">{{error}}<text class="error-action">重新加载 →</text></button>
-<view class="daily row"><view><view>每日补给</view><view class="muted">每天可领取 20 枚</view></view><button class="small primary" bindtap="claim" loading="{{busy}}" disabled="{{claimed || busy || loading || loadingMore || !!error}}">{{claimed ? '已领取' : '领取补给'}}</button></view>
-<view class="row section-heading"><view class="section-title">收支记录</view><text wx:if="{{!loading && !error}}" class="section-meta">共 {{total}} 条</text></view>
-<view wx:if="{{loading}}" class="loading-state"><view class="loading-dot"></view><text>正在读取记录…</text></view>
-<view wx:elif="{{!error}}">
-<view class="ledger-row row" wx:for="{{rows}}" wx:key="id"><view><view>{{item.title}}</view><view class="muted">{{item.date}} · 余额 {{item.balance}}</view></view><text class="{{item.amount > 0 ? 'income' : 'expense'}}">{{item.amountLabel}}</text></view>
-<view wx:if="{{!rows.length}}" class="empty"><view class="empty-title">还没有收支记录</view><view class="muted">领取上方每日补给，第一笔记录就会出现。</view></view>
-<button wx:if="{{rows.length < total}}" class="small secondary more" bindtap="more" disabled="{{loadingMore || busy}}" loading="{{loadingMore}}">加载更多</button>
-<view wx:elif="{{rows.length}}" class="footnote">已显示全部记录</view>
-</view><view class="footnote">火花币只用于兑换虚拟道具，不支持充值、转让或提现。记录时间为北京时间。</view></view>
+<view class="page">
+  <view class="eyebrow">此刻 · 我的钱包</view>
+  <view class="balance-card"><view class="balance-label">虚拟余额</view><view class="balance"><text>￥</text>{{loading ? '—' : coins}}</view><view class="balance-note">仅用于模拟体验，不可充值或提现。</view></view>
+  <button wx:if="{{error}}" class="error-panel" bindtap="refresh">{{error}}<text class="error-action">重新加载 →</text></button>
+  <view class="daily row"><view><view>每日补给</view><view class="muted">每天可领取 20 元</view></view><button class="small primary" bindtap="claim" loading="{{busy}}" disabled="{{claimed || busy || loading || loadingMore || !!error}}">{{claimed ? '已领取' : '领取补给'}}</button></view>
+  <view class="ad-rewards">
+    <view class="row"><view class="section-title">广告奖励</view><text class="section-meta">{{loading ? '—' : rewards.watchedCount}} / 3 次</text></view>
+    <view class="reward-steps"><view wx:for="{{rewards.amounts}}" wx:key="index" class="reward-step {{index < rewards.watchedCount ? 'reward-done' : ''}}"><view class="muted">第 {{index + 1}} 次</view><view class="reward-amount">+￥{{item}}</view><text class="reward-status">{{index < rewards.watchedCount ? '已领取' : '完整观看'}}</text></view></view>
+    <view wx:if="{{rewards.mode === 'demo'}}" class="demo-note">开发演示 · 模拟观看，不播放真实广告</view>
+    <view wx:elif="{{rewards.mode === 'unavailable'}}" class="muted">广告暂未开放，可以先领取每日补给。</view>
+    <view wx:else class="muted">完整观看后领取虚拟余额，每日按北京时间重置。</view>
+    <view wx:if="{{rewardError}}" class="reward-error">{{rewardError}}</view>
+    <button class="primary ad-button" bindtap="watchAd" loading="{{busy}}" disabled="{{busy || loading || loadingMore || !!error || rewards.mode === 'unavailable' || (!pendingAd && rewards.nextAmount === 0)}}">{{pendingAd ? '重试领取已完成奖励' : rewards.mode === 'unavailable' ? '广告暂未开放' : rewards.nextAmount === 0 ? '今日奖励已领完' : rewards.mode === 'demo' ? '模拟观看 · +￥' + rewards.nextAmount : '看广告 · +￥' + rewards.nextAmount}}</button>
+  </view>
+  <view class="row section-heading"><view class="section-title">收支记录</view><text wx:if="{{!loading && !error}}" class="section-meta">共 {{total}} 条</text></view>
+  <view wx:if="{{loading}}" class="loading-state"><view class="loading-dot"></view><text>正在读取记录…</text></view>
+  <view wx:elif="{{!error}}">
+    <view class="ledger-row row" wx:for="{{rows}}" wx:key="id"><view><view>{{item.title}}</view><view class="muted">{{item.date}} · 余额 ￥{{item.balance}}</view></view><text class="{{item.amount > 0 ? 'income' : 'expense'}}">{{item.amountLabel}}</text></view>
+    <view wx:if="{{!rows.length}}" class="empty"><view class="empty-title">还没有收支记录</view><view class="muted">领取每日补给，记录就会出现在这里。</view></view>
+    <button wx:if="{{rows.length < total}}" class="small secondary more" bindtap="more" disabled="{{loadingMore || busy}}" loading="{{loadingMore}}">加载更多</button>
+    <view wx:elif="{{rows.length}}" class="footnote">已显示全部记录</view>
+  </view>
+  <view class="footnote">￥ / 元为虚拟余额单位，仅用于购买模拟器中的烟，不可转让或提现。记录时间为北京时间。</view>
+</view>

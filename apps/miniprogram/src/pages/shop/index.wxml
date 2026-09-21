@@ -1,17 +1,18 @@
 <view class="page shop-page">
-  <view class="row shop-header"><view class="eyebrow">此刻 · 货架橱窗</view><button class="wallet-pill" bindtap="wallet" aria-label="火花币余额 {{coins}} 枚，查看钱包"><text class="coin-symbol">✦</text>{{loading ? '—' : coins}}<text class="wallet-arrow">›</text></button></view>
+  <view class="row shop-header"><view class="eyebrow">此刻 · 货架橱窗</view><button class="wallet-pill" bindtap="wallet" aria-label="虚拟余额 {{coins}} 元，查看钱包"><text class="coin-symbol">￥</text>{{loading ? '—' : coins}}<text class="wallet-arrow">›</text></button></view>
   <view class="title">挑一款，放进口袋。</view>
   <view class="subtitle">熟悉的包装，也有自己的原创。</view>
-  <view class="supply row"><view><view class="supply-title">每日补给</view><view class="muted">今天的 20 枚火花币</view></view><button class="small primary" bindtap="claim" loading="{{busy}}" disabled="{{busy || claimed || loading || !!error}}">{{claimed ? '已领取' : '领取补给'}}</button></view>
-  <view class="row section-heading"><view class="section-title">橱窗陈列</view><text class="section-meta">{{products.length}} 款虚拟道具</text></view>
+  <view class="supply row"><view><view class="supply-title">每日补给</view><view class="muted">今天的 20 元</view></view><button class="small primary" bindtap="claim" loading="{{busy}}" disabled="{{busy || claimed || loading || !!error}}">{{claimed ? '已领取' : '领取补给'}}</button></view>
+  <button class="reward-entry row" bindtap="wallet"><view><view>广告奖励</view><view class="muted">每日三次：+￥50 / +￥100 / +￥200</view></view><text>去钱包 ›</text></button>
+  <view class="row section-heading"><view class="section-title">橱窗陈列</view><text class="section-meta">{{products.length}} 款虚拟烟</text></view>
   <button wx:if="{{error}}" class="error-panel" bindtap="refresh">{{error}}<text class="error-action">重新加载 →</text></button>
   <view wx:elif="{{loading}}" class="loading-state"><view class="loading-dot"></view><text>正在整理橱窗…</text></view>
   <view wx:else class="cabinet">
-    <button class="shelf" wx:for="{{products}}" wx:key="id" data-id="{{item.id}}" bindtap="detail" aria-label="查看{{item.name}}，{{item.unlimited ? '免费取用' : item.price + '火花币一盒'}}">
+    <button class="shelf" wx:for="{{products}}" wx:key="id" data-id="{{item.id}}" bindtap="detail" aria-label="查看{{item.name}}，{{item.unlimited ? '免费取用' : item.price + '元一包'}}">
       <image wx:if="{{item.image && !imageErrors[item.id]}}" class="product-image" src="{{item.image}}" mode="aspectFit" data-id="{{item.id}}" binderror="imageError" aria-hidden="true" /><view wx:else class="pack" style="border-top-color:{{item.color}}" aria-hidden="true"><view class="pack-brand">{{item.brand || "MOMENT"}}</view><view class="pack-name">{{item.name}}</view><view class="pack-line"></view><view class="pack-caption">留一点时间</view></view>
-      <view class="product-info"><view class="series">{{item.series}}</view><view class="product-title">{{item.name}}</view><view class="muted">{{item.subtitle}}</view><view class="product-price">{{item.unlimited ? '免费取用' : item.price + ' 火花币'}}<text wx:if="{{!item.unlimited}}"> / 盒</text></view><view class="detail-link">查看这一款 →</view></view>
+      <view class="product-info"><view class="series">{{item.series}}</view><view class="product-title">{{item.name}}</view><view class="muted">{{item.subtitle}}</view><view class="product-price">{{item.unlimited ? '免费取用' : '￥' + item.price}}<text wx:if="{{!item.unlimited}}"> / 包</text></view><view class="detail-link">查看这一款 →</view></view>
       <view class="shelf-plank"></view>
     </button>
   </view>
-  <view class="footnote">均为模拟器虚拟道具，仅用火花币兑换，不涉及实物交易。</view>
+  <view class="footnote">每包 20 支，使用虚拟余额购买。￥ / 元仅为游戏计量，不涉及实物交易。</view>
 </view>

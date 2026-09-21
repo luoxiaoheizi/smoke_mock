@@ -29,7 +29,7 @@ Page({
       const { player } = await api.purchase({ requestId: operationId(key), productId: this.productId });
       completeOperation(key);
       this.setData({ coins: player.coins, owned: player.inventory[this.productId] ?? 0, bought: true });
-      wx.showToast({ title: '已放进你的收藏', icon: 'success' });
+      wx.showToast({ title: '已购买 20 支', icon: 'success' });
     } catch (error) { toastError(error); } finally { this.setData({ busy: false }); }
   },
   async use() {

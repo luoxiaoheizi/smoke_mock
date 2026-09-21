@@ -12,7 +12,7 @@ function harness(){
 }
 test('前端跨页主流程：兑换、选用、开局、操作、暂停恢复、结束与历史',async()=>{
  const h=harness(),shop=h.load('shop');await shop.refresh();assert.equal(shop.data.coins,100);
- const detail=h.load('product');detail.productId='rain';await detail.refresh();await detail.buy();assert.equal(detail.data.owned,10);await detail.use();
+ const detail=h.load('product');detail.productId='rain';await detail.refresh();await detail.buy();assert.equal(detail.data.owned,20);await detail.use();
  const experience=h.load('experience');experience.visible=true;await experience.refresh();assert.equal(experience.data.productName,'雨后');
  await experience.enter();const text=experience.data.eventText;assert(experience.data.sessionId);
  experience.ignite();h.flush();assert.equal(experience.data.phase,'burning');
@@ -22,7 +22,7 @@ test('前端跨页主流程：兑换、选用、开局、操作、暂停恢复�
  experience.visible=true;await experience.refresh();assert.equal(experience.data.eventText,text);assert.equal(experience.data.phase,'burning');
  await experience.finish();experience.onHide();await experience.syncTask;
  const history=h.load('history');await history.refresh();assert.equal(history.data.rows.length,1);
- const collection=h.load('collection');await collection.refresh();assert.equal(collection.data.products.find(p=>p.id==='rain').owned,9);
+ const collection=h.load('collection');await collection.refresh();assert.equal(collection.data.products.find(p=>p.id==='rain').owned,19);
  const wallet=h.load('wallet');await wallet.refresh();assert.equal(wallet.data.coins,80);await wallet.claim();assert.equal(wallet.data.coins,100);
  assert.equal(h.intervals.size,0);
 });
@@ -82,7 +82,7 @@ test('品牌商品跨页流程和图片失败降级',async()=>{
  const detail=h.load('product');detail.onLoad({id:'zhonghua-hard'});await detail.onShow();
  assert.equal(detail.data.product.name,'中华（硬）');
  detail.imageError();assert.equal(detail.data.imageFailed,true);
- await detail.buy();assert.equal(detail.data.owned,20);assert.equal(detail.data.coins,40);
+ await detail.buy();assert.equal(detail.data.owned,20);assert.equal(detail.data.coins,55);
  await detail.use();
  const experience=h.load('experience');experience.visible=true;await experience.refresh();
  assert.equal(experience.data.productName,'中华（硬）');await experience.enter();
@@ -92,4 +92,34 @@ test('品牌商品跨页流程和图片失败降级',async()=>{
  collection.imageError({currentTarget:{dataset:{id:'zhonghua-hard'}}});
  assert.equal(collection.data.imageErrors['zhonghua-hard'],true);
  const history=h.load('history');await history.refresh();assert.equal(history.data.rows[0].product,'中华（硬）');
+});
+
+test('广告开发演示取消不计次，看完三次450元，第四次不再弹窗',async()=>{
+ const h=harness();let modals=0,complete=false;
+ h.wx.showModal=options=>{modals++;options.success({confirm:complete});};
+ const wallet=h.load('wallet');await wallet.refresh();
+ await wallet.watchAd();assert.equal(wallet.data.coins,100);assert.equal(wallet.data.rewards.watchedCount,0);
+ complete=true;
+ for(const expected of [150,250,450]){await wallet.watchAd();assert.equal(wallet.data.coins,expected);}
+ const count=modals;await wallet.watchAd();assert.equal(modals,count);assert.equal(wallet.data.busy,false);
+});
+test('广告完成后发奖失败，重新进入可重试领取，不需重复观看',async()=>{
+ const h=harness();let modals=0;
+ h.wx.showModal=options=>{modals++;options.success({confirm:true});};
+ const write=h.wx.setStorageSync;
+ h.wx.setStorageSync=(key,value)=>{if(key==='smoke-local-player-v1'&&value.coins>100)throw new Error('写入失败');write(key,value);};
+ const wallet=h.load('wallet');await wallet.refresh();await wallet.watchAd();
+ assert.equal(wallet.data.pendingAd,true);assert.equal(wallet.data.coins,100);
+ h.wx.setStorageSync=write;
+ const reopened=h.load('wallet');await reopened.refresh();await reopened.watchAd();
+ assert.equal(reopened.data.coins,150);assert.equal(reopened.data.pendingAd,false);assert.equal(modals,1);
+});
+test('广告播放中重复点击及离开页面不会重复请求或发奖',async()=>{
+ const h=harness();let callback;let shown;
+ const ready=new Promise(r=>shown=r);
+ h.wx.showModal=options=>{callback=options.success;shown();};
+ const wallet=h.load('wallet');await wallet.refresh();
+ const task=wallet.watchAd();await ready;await wallet.watchAd();
+ wallet.onUnload();callback({confirm:true});await task;
+ const reopened=h.load('wallet');await reopened.refresh();assert.equal(reopened.data.coins,100);
 });

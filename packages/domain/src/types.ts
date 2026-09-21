@@ -5,7 +5,7 @@ export interface Scene {
 export interface Product {
   id: string; name: string; subtitle: string; color: string; price: number; packSize: number; unlimited: boolean;
   description?: string; series?: string;
-  /** 本地包装素材与公开图鉴参考信息；price 始终为游戏火花币。 */
+  /** price 单位为虚拟元；品牌款按公开零售参考价配置，不是实物交易。 */
   image?: string; brand?: string; manufacturer?: string; packaging?: string; lengthMm?: number; sourceUrl?: string;
 }
 export interface StoryEvent {
@@ -24,13 +24,18 @@ export interface Session {
   timeLabel: string; period: TimeContext['period']; status: 'active' | 'ended'; endedAt?: string; progress?: Progress;
 }
 export interface Purchase { id: string; productId: string; price: number; quantity: number; createdAt?: string }
-export interface LedgerEntry { id: string; kind: 'welcome' | 'purchase' | 'daily'; amount: number; balance: number; title: string; createdAt: string }
+export interface LedgerEntry { id: string; kind: 'welcome' | 'purchase' | 'daily' | 'ad'; amount: number; balance: number; title: string; createdAt: string }
+export interface AdRewardTicket { id: string; day: string; createdAt: string; claimedAt?: string; amount?: number }
+export interface AdRewardStatus { watchedCount: number; nextAmount: number; amounts: number[] }
+export interface RewardOptions extends AdRewardStatus { mode: 'demo' | 'wechat' | 'unavailable'; adUnitId?: string }
 export interface PlayerState {
   version: 1; coins: number; inventory: Record<string, number>; sessions: Session[]; purchases: Purchase[];
   lastClaimDay?: string; preferences?: Preferences; ledger?: LedgerEntry[];
+  adRewards?: AdRewardTicket[];
 }
 export interface Bootstrap {
   scenes: Scene[]; products: Product[]; player: PlayerState; serverTime: string; mode: 'local-demo' | 'api';
+  rewards: RewardOptions;
 }
 export interface StartSessionInput { requestId: string; sceneId: string; productId: string }
 export interface PurchaseInput { requestId: string; productId: string }

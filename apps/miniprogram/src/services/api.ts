@@ -1,5 +1,6 @@
 import {
   claimDaily, createPlayer, endSession, normalizePlayer, PRODUCTS, purchase, SCENES, startSession, saveProgress, updatePreferences,
+  adRewardStatus, beginAdReward, claimAdReward, type AdRewardTicket,
   type Bootstrap, type PlayerState, type PurchaseInput, type PurchaseResult, type SessionResult, type StartSessionInput,
   type Preferences, type Progress, type PageResult, type LedgerEntry, type Session, type LoginResult,
 } from '../../../../packages/domain/src/index';
@@ -71,7 +72,7 @@ function remember(player: PlayerState) { if (player.preferences) savePreferences
 function page<T>(items: T[], offset: number, limit: number): PageResult<T> { return { items: items.slice(offset, offset + limit), total: items.length, offset, limit }; }
 export const api = {
   async bootstrap(): Promise<Bootstrap> {
-    const result = isLocalDemo ? await local(player => ({ scenes: SCENES, products: PRODUCTS, player, serverTime: new Date().toISOString(), mode: 'local-demo' as const })) : await request<Bootstrap>('/bootstrap');
+    const result = isLocalDemo ? await local(player => ({ scenes: SCENES, products: PRODUCTS, player, serverTime: new Date().toISOString(), mode: 'local-demo' as const, rewards: { ...adRewardStatus(player), mode: 'demo' as const } })) : await request<Bootstrap>('/bootstrap');
     remember(result.player); return result;
   },
   purchase(input: PurchaseInput): Promise<PurchaseResult> { return isLocalDemo ? local(p => purchase(p, input)) : request('/purchases', 'POST', input); },
@@ -79,6 +80,8 @@ export const api = {
   end(id: string): Promise<SessionResult> { return isLocalDemo ? local(p => endSession(p, id)) : request('/sessions/' + encodeURIComponent(id) + '/end', 'POST'); },
   progress(id: string, progress: Progress): Promise<SessionResult> { return isLocalDemo ? local(p => saveProgress(p, id, progress)) : request('/sessions/' + encodeURIComponent(id) + '/progress', 'PUT', progress); },
   claim(): Promise<PlayerState> { return isLocalDemo ? local(p => claimDaily(p)) : request('/wallet/daily-claim', 'POST'); },
+  beginAd(): Promise<AdRewardTicket> { return isLocalDemo ? local(p => beginAdReward(p, newRequestId())) : request('/wallet/ad/start', 'POST'); },
+  claimAd(ticketId: string): Promise<{ player: PlayerState; amount: number }> { return isLocalDemo ? local(p => claimAdReward(p, ticketId)) : request('/wallet/ad/claim', 'POST', { ticketId }); },
   async preferences(patch: Partial<Preferences>): Promise<PlayerState> { return remember(isLocalDemo ? await local(p => updatePreferences(p, patch)) : await request<PlayerState>('/preferences', 'POST', patch)); },
   history(offset = 0, limit = 20): Promise<PageResult<Session>> { return isLocalDemo ? local(p => page(p.sessions.filter(s => s.status === 'ended').reverse(), offset, limit)) : request('/sessions?offset=' + offset + '&limit=' + limit); },
   ledger(offset = 0, limit = 20): Promise<PageResult<LedgerEntry>> { return isLocalDemo ? local(p => page([...(p.ledger ?? [])].reverse(), offset, limit)) : request('/wallet/ledger?offset=' + offset + '&limit=' + limit); },

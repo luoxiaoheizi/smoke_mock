@@ -11,3 +11,13 @@
 .ledger-row>text { font-family:var(--font-number); font-size:32rpx; flex-shrink:0; }
 .income { color:var(--color-primary); }.expense { color:var(--color-accent); }
 .more { margin:26rpx auto 0; }
+.ad-rewards { padding:30rpx 0; border-bottom:1rpx solid var(--color-border); }
+.reward-steps { display:flex; gap:12rpx; margin:24rpx 0; }
+.reward-step { flex:1; min-width:0; text-align:center; padding:22rpx 8rpx; border:1rpx solid var(--color-border); border-radius:var(--radius-control); background:var(--color-surface); }
+.reward-done { background:var(--color-soft); }
+.reward-step .muted { font-size:23rpx; }
+.reward-amount { font-family:var(--font-number); font-size:35rpx; font-weight:600; margin:12rpx 0; }
+.reward-status { color:var(--color-muted); font-size:22rpx; }
+.ad-button { width:100%; margin-top:24rpx; }
+.demo-note { font-size:24rpx; color:var(--color-accent); }
+.reward-error { padding:18rpx; margin-top:18rpx; border-radius:var(--radius-control); color:var(--color-danger); background:var(--color-error-bg); font-size:24rpx; }

@@ -56,3 +56,13 @@ PGlite 和 pg 使用相同的建表 SQL 与仓储查询。当前玩家数据为 
 
 登录上游使用微信官方 code2Session 地址；本轮未用真实 AppID 实测。独立 PostgreSQL 适配器已实现，自动测试使用落盘 PGlite。事件编辑暂通过源码，不提供公网管理接口。
 
+
+## 广告奖励
+
+bootstrap 新增 rewards：mode（demo / wechat / unavailable）、adUnitId（可选）、watchedCount、nextAmount、amounts。
+
+POST /wallet/ad/start：需登录，服务端创建或复用该账号当前有效的待完成 ticket；当天已完成三次则拒绝。返回 id、day、createdAt。
+
+POST /wallet/ad/claim：请求仅允许 { ticketId }，不接受客户端金额或次数。按服务器北京时间和已完成次数计算 50/100/200；玩家事务行锁、唯一流水及 ticket 状态保证重复/并发领取不重复加钱。无权限、不存在、过期和超额请求失败。尚未领取的 ticket 30 分钟有效，跨北京时间自然日失效；已领取的重复请求返回原结果。
+
+普通 SDK onClose 是客户端播放结果，不是服务端可信广告凭证。当前实现限制单账号额度和重复领取，不能证明恶意客户端实际看过广告；上线前需结合广告平台支持的验真/风控能力评估。详细边界见广告奖励接入.md。

@@ -80,7 +80,7 @@ test('兑换由商品目录定价，重复编号不重复扣款，冲突编号�
   const player = createPlayer();
   purchase(player, { requestId: 'purchase-001', productId: 'rain' });
   purchase(player, { requestId: 'purchase-001', productId: 'rain' });
-  assert.equal(player.coins, 80); assert.equal(player.inventory.rain, 10); assert.equal(player.purchases.length, 1);
+  assert.equal(player.coins, 80); assert.equal(player.inventory.rain, 20); assert.equal(player.purchases.length, 1);
   assert.throws(() => purchase(player, { requestId: 'purchase-001', productId: 'night' }), e => e.code === 'REQUEST_CONFLICT');
 });
 test('余额不足与未知商品不会改变玩家状态', () => {

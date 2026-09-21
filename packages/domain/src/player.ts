@@ -25,12 +25,12 @@ export function purchase(player: PlayerState, input: PurchaseInput, now = new Da
   const product = PRODUCTS.find(item => item.id === input.productId);
   if (!product) throw new DomainError('PRODUCT_NOT_FOUND', '商品不存在');
   if (product.unlimited) throw new DomainError('ALREADY_AVAILABLE', '基础款可以直接使用');
-  if (player.coins < product.price) throw new DomainError('INSUFFICIENT_COINS', '火花币不足，领取每日补给或使用留白');
+  if (player.coins < product.price) throw new DomainError('INSUFFICIENT_COINS', '余额不足，领取每日补给或使用留白');
   const receipt = { id: input.requestId, productId: product.id, price: product.price, quantity: product.packSize, createdAt: now.toISOString() };
   player.coins -= product.price;
   player.inventory[product.id] = (player.inventory[product.id] ?? 0) + product.packSize;
   player.purchases.push(receipt);
-  player.ledger!.push({ id: 'purchase-' + input.requestId, kind: 'purchase', amount: -product.price, balance: player.coins, title: '兑换 · ' + product.name, createdAt: now.toISOString() });
+  player.ledger!.push({ id: 'purchase-' + input.requestId, kind: 'purchase', amount: -product.price, balance: player.coins, title: '购买 · ' + product.name, createdAt: now.toISOString() });
   return { purchase: receipt, player };
 }
 export function startSession(player: PlayerState, input: StartSessionInput, now = new Date(), random = Math.random): SessionResult {
@@ -93,7 +93,7 @@ export function updatePreferences(player: PlayerState, patch: Partial<Preference
   if (patch.productId) {
     const product = PRODUCTS.find(item => item.id === patch.productId);
     if (!product) throw new DomainError('PRODUCT_NOT_FOUND', '商品不存在');
-    if (!product.unlimited && !(player.inventory[product.id]! > 0)) throw new DomainError('OUT_OF_STOCK', '请先到橱窗兑换');
+    if (!product.unlimited && !(player.inventory[product.id]! > 0)) throw new DomainError('OUT_OF_STOCK', '请先到橱窗购买');
   }
   player.preferences = { ...player.preferences!, ...patch };
   return player;
